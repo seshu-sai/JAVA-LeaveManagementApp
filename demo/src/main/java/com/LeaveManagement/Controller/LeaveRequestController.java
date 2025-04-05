@@ -20,6 +20,7 @@ import com.LeaveManagement.Model.LeaveStatus;
 import com.LeaveManagement.Service.EmployeeServiceImpl;
 import com.LeaveManagement.Service.LeaveRequestServiceImpl;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/leave")
 public class LeaveRequestController {
@@ -47,7 +48,7 @@ public class LeaveRequestController {
 
 	// Apply Leave
 	@PostMapping("/apply")
-	public ResponseEntity<String> applyLeave(@Valid @RequestBody LeaveRequest leaveRequest) throws ParseException {
+	public ResponseEntity<String> applyLeave( @RequestBody LeaveRequest leaveRequest) throws ParseException {
 
 		Date startDate = leaveRequest.getLeaveStartDate();
 		Date endDate = leaveRequest.getLeaveEndDate();
@@ -133,24 +134,30 @@ public class LeaveRequestController {
 	// List Leaves by Status
 	@GetMapping("/listByStatus/{status}")
 	public ResponseEntity<List<LeaveRequest>> listLeaveByStatus(@PathVariable LeaveStatus status) {
-		List<LeaveRequest> leaveRequests = leaveRequestServiceImpl.findLeaveByLeaveStatus(status);
+		List<LeaveRequest> leaveRequests = leaveRequestServiceImpl.findLeaveByLeaveStatus(status.APPLIED);
 		if (leaveRequests.isEmpty()) {
 			return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.ok(leaveRequests);
 	}
 
-	// Approve Leave
+
 	@PutMapping("/approve/{id}")
 	public ResponseEntity<String> approveLeave(@PathVariable int id) {
 		leaveRequestServiceImpl.approveLeaveManager(id);
 		return ResponseEntity.ok("Leave approved successfully.");
 	}
 
-	// Reject Leave
 	@PutMapping("/reject/{id}")
 	public ResponseEntity<String> rejectLeave(@PathVariable int id) {
 		leaveRequestServiceImpl.rejectLeaveManager(id);
 		return ResponseEntity.ok("Leave rejected successfully.");
 	}
+
+	@GetMapping("/listBySupervisor/{supervisorId}")
+	public ResponseEntity<List<LeaveRequest>> listLeaveBySupervisor(@PathVariable int supervisorId) {
+		List<LeaveRequest> leaveRequests = leaveRequestServiceImpl.findLeaveBySupervisor(supervisorId);
+		return ResponseEntity.ok(leaveRequests);
+	}
+
 }

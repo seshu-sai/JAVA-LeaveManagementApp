@@ -38,7 +38,7 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless REST APIs
                 .authorizeHttpRequests(requests -> requests
-                       .requestMatchers("/login","/admin/add").permitAll() // Allow public access to /login
+                       .requestMatchers("/login").permitAll() // Allow public access to /login
                        .anyRequest().authenticated()) // All other requests require authentication
                 .httpBasic(Customizer.withDefaults()) // Basic authentication
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session management

@@ -3,12 +3,10 @@ package com.LeaveManagement.Controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import com.LeaveManagement.Repo.EmployeeRepo;
+import com.LeaveManagement.Service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,7 @@ import com.LeaveManagement.Model.Role;
 import com.LeaveManagement.Service.EmployeeServiceImpl;
 
 
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class EmployeeController{
 
@@ -35,6 +33,9 @@ public class EmployeeController{
 	EmployeeServiceImpl employeeServiceImpl;
     @Autowired
     private EmployeeRepo employeeRepo;
+
+	@Autowired
+	JwtService jwtService;
 
 	private final LocalDate localDate = LocalDate.now();
 	private final Date currentDate = java.sql.Date.valueOf(localDate);
@@ -54,9 +55,21 @@ public class EmployeeController{
 	}
 
 	@PostMapping("/login")
-	public String Login(@Valid @RequestBody Employee employee) {
+	public ResponseEntity<Map<String, Object>> Login(@RequestBody Employee employee) {
+		Map<String, Object> response = new HashMap<>();
 
-		return employeeServiceImpl.verify(employee);
+		Employee authEmployee =  employeeServiceImpl.verify(employee);
+		System.out.println(authEmployee);
+		if (authEmployee != null) {
+			String token = jwtService.generateToken(authEmployee.getUsername());
+			response.put("token", token);
+			response.put("emplid", authEmployee.getEmplid());
+			response.put("role", authEmployee.getRole());
+			response.put("supervisorId", authEmployee.getSupervisorId());
+			return ResponseEntity.ok(response);
+		}
+
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 	}
 
 	@PostMapping(value = "/admin/add")

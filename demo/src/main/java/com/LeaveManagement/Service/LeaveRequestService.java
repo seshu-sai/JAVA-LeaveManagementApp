@@ -15,4 +15,5 @@ public interface LeaveRequestService{
 	public void approveLeaveManager(int id);
 	public void rejectLeaveManager(int id);
 	public List<LeaveRequest> findLeaveByEmplid(int emplid);
+	public List<LeaveRequest> findLeaveBySupervisor(int supervisorId);
 }

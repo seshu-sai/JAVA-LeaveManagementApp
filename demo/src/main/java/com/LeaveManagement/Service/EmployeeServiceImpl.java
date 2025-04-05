@@ -64,13 +64,13 @@ public class EmployeeServiceImpl implements EmployeeService{
 	}
 
 
-	public String verify(Employee employee) {
+	public Employee verify(Employee employee) {
 		Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(employee.getUsername(), employee.getPassword()));
 		if(auth.isAuthenticated()) {
-			return jwtService.generateToken(employee.getUsername());
+			return employeeRepo.findEmployeeByUsername(employee.getUsername());
 		}
 			else{
-				return "Not Authenticated";
+				return null;
 			}
 		}
 

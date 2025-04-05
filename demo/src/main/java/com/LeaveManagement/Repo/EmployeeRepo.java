@@ -30,4 +30,7 @@ public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
 
 	@Query("SELECT u.emplid FROM Employee u ORDER BY u.id DESC LIMIT 1")
 	public String findLastEmployeeId();
+
+	@Query("SELECT u FROM Employee u WHERE u.username = :username")
+	public String findLastEmployeeId(@Param("username") String username);
 }

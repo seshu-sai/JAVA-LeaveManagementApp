@@ -1,4 +1,4 @@
-snpackage com.LeaveManagement.Config;
+package com.LeaveManagement.Config;
 
 import com.LeaveManagement.Service.JwtService;
 import com.LeaveManagement.Service.UserDetailServiceImpl;

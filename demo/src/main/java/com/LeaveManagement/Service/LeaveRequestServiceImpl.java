@@ -85,5 +85,10 @@ public class LeaveRequestServiceImpl implements LeaveRequestService{
 	return leaveRequestRepo.findLeaveRequestByEmplid(emplid);
 	
 	}
-	
+
+	public List<LeaveRequest> findLeaveBySupervisor(int supervisorId) {
+		return leaveRequestRepo.findBySupervisorId(supervisorId);
+	}
+
+
 }
